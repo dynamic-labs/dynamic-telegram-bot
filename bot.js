@@ -1,8 +1,6 @@
-import { Telegraf } from "telegraf";
-
-import jwt from "jsonwebtoken";
-
-import * as nodeCrypto from "crypto";
+const { Telegraf } = require("telegraf");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const LOGIN_URL = process.env.LOGIN_URL;
@@ -61,7 +59,7 @@ bot.launch();
  * @param data the user data
  * @returns hmac string
  */
-export const generateTelegramHash = (data: any): string => {
+const generateTelegramHash = (data) => {
   // Prepare data object with the required fields
   const useData = {
     auth_date: String(data.authDate),
@@ -80,7 +78,7 @@ export const generateTelegramHash = (data: any): string => {
       }
       return acc;
     },
-    {} as Record<string, string>
+    {}
   );
 
   // Create the data check string by sorting the keys
@@ -89,14 +87,9 @@ export const generateTelegramHash = (data: any): string => {
     .sort((a, b) => a.localeCompare(b))
     .join("\n");
 
-  console.log(dataCheckArr);
-
-  const TELEGRAM_SECRET = nodeCrypto
-    .createHash("sha256")
-    .update(TOKEN)
-    .digest();
+  const TELEGRAM_SECRET = crypto.createHash("sha256").update(TOKEN).digest();
   // Generate HMAC-SHA256 hash from the data check string
-  const hmac = nodeCrypto
+  const hmac = crypto
     .createHmac("sha256", TELEGRAM_SECRET)
     .update(dataCheckArr)
     .digest("hex");
