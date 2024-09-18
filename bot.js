@@ -28,7 +28,6 @@ bot.start((ctx) => {
     TOKEN,
     { algorithm: "HS256" }
   );
-  console.log("telegramAuthToken", telegramAuthToken);
   const encodedTelegramAuthToken = encodeURIComponent(telegramAuthToken);
 
   // Define the inline keyboard with a web app button
